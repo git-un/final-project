@@ -1,0 +1,54 @@
+<ol>
+{% for album in list %}
+    <li> {{ album }} </li>
+{% endfor %}
+</ol>
+
+<p id="bubbleData" style="display: none">
+	{{bubble}}
+</p>
+
+
+<script src="//d3plus.org/js/d3.js"></script>
+
+<!-- load D3plus after D3js -->
+<script src="//d3plus.org/js/d3plus.js"></script>
+
+<!-- create container element for visualization -->
+<div id="viz"></div>
+
+<script>
+  // sample data array
+  var data = []
+  var dataText = document.getElementById('bubbleData').innerText;
+  dataText = dataText.split('~~');
+
+  for(i in dataText)
+  	try{
+  		console.log(JSON.parse(dataText[i]))
+  		data.push(JSON.parse(dataText[i]))
+  	} catch(err){
+  		console.log('err')
+  	}
+
+  	console.log(data)
+  // var sample_data = [
+  //   {"value": 8, "name": "alpha", "group": "group 1"},
+  //   {"value": 2, "name": "epsilon", "group": "group 1"},
+  //   {"value": 3, "name": "zeeta", "group": "group 1"},
+  //   {"value": 1, "name": "zeta", "group": "group 1"},
+  //   {"value": 1, "name": "zeta1", "group": "group 1"},
+  //   {"value": 1, "name": "zeta2", "group": "group 1"},
+  //   {"value": 1, "name": "zeta3", "group": "group 1"}
+  // ]
+  // instantiate d3plus
+  var visualization = d3plus.viz()
+    .container("#viz")     // container DIV to hold the visualization
+    .data(data)     // data to use with the visualization
+    .type("bubbles")       // visualization type
+    .id(["group", "name"]) // nesting keys
+    .depth(1)              // 0-based depth
+    .size("value")         // key name to size bubbles
+    .color("group")        // color by each group
+    .draw()                // finally, draw the visualization!
+</script>

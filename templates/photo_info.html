@@ -1,0 +1,15 @@
+{% if num == 1 %}
+    <h1>1 photo was retrieved</h1>
+{% else %}
+    <h1>{{ num }} photos were retrieved</h1>
+{% endif %}
+
+<p>*******</p>
+<br>
+<h2>Photo titles:</h2>
+
+<ul>
+{% for title in photo_titles %}
+    <li>{{ title }}</li>
+{% endfor %}
+</ul>
