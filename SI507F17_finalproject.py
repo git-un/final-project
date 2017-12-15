@@ -90,6 +90,14 @@ class Album():
         else:
             return "Album " + self.name + " is available for only $" + self.price
 
+    def __repr__(self, details):
+        return "Details of albums: " json.dumps(details)
+
+    def __contains__(self, key)
+        if key in json.dumps(details):
+            return True
+        
+
 
 class Artist():
     """
@@ -108,10 +116,14 @@ class Artist():
 
 
     def __str__(self, details):
-        if int(self.price) > PRICE_LIMIT:
-            return "Album " + self.name + " is available for $" + self.price
-        else:
-            return "Album " + self.name + " is available for only $" + self.price
+            return "Artist : " + self.artistId
+
+    def __repr__(self, details):
+            return "Artist : " + self.artistId + self.artistName
+
+    def __contains__(self, key)
+        if key == self.artistId:
+            return True
 
 def getArtistInfo(name):
     print(name)
