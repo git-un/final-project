@@ -2,6 +2,7 @@
 from flask import Flask, render_template
 from flask_script import Manager
 from config import *
+from bs4 import BeautifulSoup
 import psycopg2
 import psycopg2.extras
 import requests 
@@ -141,6 +142,26 @@ class Artist():
         else:
             return "Album " + self.name + " is available for only $" + self.price
 
+def getArtistInfo(name):
+    print(name)
+    discogs_params = {}
+    discogs_params['type'] = "all"
+    discogs_params['q'] = name
+    catData = requests.get("https://www.discogs.com/search", params = discogs_params).text
+    catSoup = BeautifulSoup(catData, 'html.parser')
+
+    href = catSoup.select('#search_results div.shortcut_navigable a.thumbnail_link')[0]['href']
+
+    print(href)
+
+    artData =  requests.get("https://www.discogs.com" + href).text
+    artSoup = BeautifulSoup(artData, 'html.parser')
+
+    mainImage = artSoup.select('.body .thumbnail_center img')[0]['src']
+
+    return mainImage
+    
+
 
 
 @app.route('/')
@@ -179,23 +200,32 @@ def hello_artist(name):
         params['limit'] = '300'
         params['entity'] = 'album'
         response_obj = requests.get(baseurl, params=params)
+
         itunes_data = json.loads(response_obj.text)
+
+    try:
+        mainImage = getArtistInfo(name)
+    except:
+        mainImage = ''
     genreList = {}
     albums = []
 
     for i in range(len(itunes_data['results'])):
         # try:
-        albums.append({
+        data = {
             "name" : itunes_data['results'][i]['collectionName'] if 'collectionName' in itunes_data['results'][i].keys() else itunes_data['results'][i]['collectionname'],
             "img" : itunes_data['results'][i]['artworkUrl100'] if 'artworkUrl100' in itunes_data['results'][i].keys() else itunes_data['results'][i]['albumart'],
-            "price" : itunes_data['results'][i]['collectionPrice'] if 'collectionPrice' in itunes_data['results'][i].keys() else itunes_data['results'][i]['price'],
             "link" : itunes_data['results'][i]['collectionViewUrl'] if 'collectionViewUrl' in itunes_data['results'][i].keys() else itunes_data['results'][i]['link']
+            }
 
-            })
+        try:
+            data['price'] = itunes_data['results'][i]['collectionPrice'] if 'collectionPrice' in itunes_data['results'][i].keys() else itunes_data['results'][i]['price']
+        except:
+            data['price'] = 0 
+        
+        albums.append(data)
 
         albumDetails = {}
-
-        print(itunes_data['results'][i])
         
         albumDetails['name'] = itunes_data['results'][i]['collectionName'] if 'collectionName' in itunes_data['results'][i].keys() else itunes_data['results'][i]['collectionname']
         albumDetails['genre'] = itunes_data['results'][i]['primaryGenreName'] if 'primaryGenreName' in itunes_data['results'][i].keys() else itunes_data['results'][i]['genre']
@@ -226,7 +256,7 @@ def hello_artist(name):
     for key, value in genreList.items():
         genreCount = genreCount + json.dumps({'name': key, 'value': int(value), 'group': 'group 1'}) + '~~'
 
-    return render_template('albums.html', list=albums, bubble = genreCount)
+    return render_template('albums.html', list=albums, bubble = genreCount, img=mainImage)
 
 @app.route('/user/<yourname>')
 def hello_name(yourname):
