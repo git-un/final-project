@@ -1,3 +1,8 @@
 <h1> Enter name of the artist </h1>
 <input id="search" placeholder="name here">
+<datalist id="search">
+	{% for suggestion in list %}
+    	<option value={{suggestion}}>
+	{% endfor %}
+</datalist>
 <button onclick="window.location = '/artist/' + document.getElementById('search').value">Search</button>

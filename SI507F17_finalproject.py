@@ -29,10 +29,16 @@ conn, cur = get_connection_and_cursor()
 def create_db():
     cur.execute("""CREATE TABLE IF NOT EXISTS album_table (
         collectionId INTEGER PRIMARY KEY,
+        artistId NUMERIC,
         collectionName VARCHAR(255) NOT NULL,
         price NUMERIC,
         link VARCHAR(255),
         genre VARCHAR(128)
+    )""")
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS artist_table (
+        artistId NUMERIC PRIMARY KEY,
+        artistName VARCHAR(255) NOT NULL
     )""")
 
     conn.commit()
@@ -91,17 +97,20 @@ class Album():
     This object is responsible for saving the album info in the database
     """
     def __init__(self, details):
-        self.name = details['name']
-        self.price = details['price']
-        self.balance = details['balance']
-        self.link = details['link']
+        name = details['name']
+        price = details['price']
+        link = details['link']
+        genre = details['genre']
+        artistId = details['artistId']
+        collectionId = details['collectionId']
 
-    cur.execute("""INSERT INTO
-        album_table(collectionId, collectionName, price, link, genre)
-        values(113, 'cjdh', 112, 'ajhdh', 'ljede')
-        on conflict do nothing""")
 
-    conn.commit()
+        cur.execute("""INSERT INTO
+            album_table(collectionId, artistId, collectionName, price, link, genre)
+            values(%(collectionId)s, %(artistId)s, %(name)s, %(price)s, %(link)s, %(genre)s)
+            on conflict do nothing""", details)
+
+        conn.commit()
 
 
     def __str__(self, details):
@@ -109,6 +118,31 @@ class Album():
             return "Album " + self.name + " is available for $" + self.price
         else:
             return "Album " + self.name + " is available for only $" + self.price
+
+
+class Artist():
+    """
+    This object is responsible for saving the album info in the database
+    """
+    def __init__(self, details):
+        artistId = details['artistId']
+
+
+        cur.execute("""INSERT INTO
+            artist_table(artistId, artistName)
+            values(%(artistId)s, %(artistName)s)
+            on conflict do nothing""", details)
+
+        conn.commit()
+
+
+    def __str__(self, details):
+        if int(self.price) > PRICE_LIMIT:
+            return "Album " + self.name + " is available for $" + self.price
+        else:
+            return "Album " + self.name + " is available for only $" + self.price
+
+
 
 @app.route('/')
 def hello_world():
@@ -123,7 +157,7 @@ def hello_artist(name):
     baseurl = 'https://itunes.apple.com/search?'
     params = {}
     params['term'] = name
-    params['limit'] = '100'
+    params['limit'] = '300'
     params['entity'] = 'album'
     response_obj = requests.get(baseurl, params=params)
     itunes_data = json.loads(response_obj.text)
@@ -131,15 +165,37 @@ def hello_artist(name):
     albums = []
 
     for i in range(len(itunes_data['results'])):
+        # try:
+        albums.append({
+            "name" : itunes_data['results'][i]['collectionName'],
+            "img" : itunes_data['results'][i]['artworkUrl100']
+            })
+
+        albumDetails = {}
+        
+        albumDetails['name'] = itunes_data['results'][i]['collectionName']
+        albumDetails['genre'] = itunes_data['results'][i]['primaryGenreName']
+        albumDetails['link'] = itunes_data['results'][i]['collectionViewUrl']
+        albumDetails['collectionId'] = itunes_data['results'][i]['collectionId']
+        albumDetails['artistName'] = itunes_data['results'][i]['artistName']
         try:
-            albums.append(itunes_data['results'][i]['collectionName'])
-            genre = itunes_data['results'][i]['primaryGenreName']
-            if genre in dict.keys(genreList):
-                genreList[genre] = genreList[genre] + 1
-            else:
-                genreList[genre] = 1;
+            albumDetails['price'] = itunes_data['results'][i]['collectionPrice']
         except:
-            albums.append(i)
+            albumDetails['price'] = 0
+        albumDetails['artistId'] = itunes_data['results'][i]['artistId']
+
+        alb = Album(albumDetails)
+        art = Artist(albumDetails)
+
+        genre = albumDetails['genre']
+        if genre in dict.keys(genreList):
+            genreList[genre] = genreList[genre] + 1
+        else:
+            genreList[genre] = 1;
+
+        # except:
+        #     albums.append(i)
+
 
     genreCount = ''
     for key, value in genreList.items():
