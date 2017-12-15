@@ -1,36 +1,34 @@
-At the command prompt type: You need to run server after the name of the python file
-Name of the database is:
-Please pip install everything from requirements.txt
 
-Python version expected: 3
-You need to pip install:
-There is no need for any key/secret.
-What happens when the code runs
-The Input: Expect to see a search bar on the HTML page in which you enter a music artist’s name. 
-The Output: The code should return a list of works/albums/music collection related to the artist. 
-The visualisation: A bubble chart representing the genre of music played by the artist searched for.
-iTunes API link:  https://developer.apple.com/library/content/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1
 
 
 Classes defined in the code are:
 
 
 
-# Project Title
+# Final Project
 
-One Paragraph of project description goes here
+This is a final projectfor SI 507.
 
-## Getting Started
+## Instructions to Grader
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+### At the command prompt type: You need to run server after the name of the python file
+### Name of the database is:
 
-### Prerequisites
 
-What things you need to install the software and how to install them
+### Python version: 3
 
-```
-Give examples
-```
+
+### What happens when the code runs
+The Input: Expect to see a search bar on the HTML page in which you enter a music artist’s name. 
+The Output: The code should return a list of works/albums/music collection related to the artist. 
+### The visualisation: A bubble chart representing the genre of music played by the artist searched for.
+iTunes API link:  https://developer.apple.com/library/content/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1
+
+### Requirements
+
+Please pip install everything from requirements.txt. Check Requirements.txt.
+There is no need for any key/secret.
+
 
 ### Installing
 
