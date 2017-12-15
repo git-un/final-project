@@ -67,13 +67,13 @@ create_db()
 
 conn.commit()
 
-def execute_and_print(query, numer_of_results=30):
-    cur.execute(query)
-    results = cur.fetchall()
-    for r in results[:numer_of_results]:
-        #print(type(r))
-        print(r)
-    print('--> Result Rows:', len(results))
+# def execute_and_print(query, numer_of_results=30):
+#     cur.execute(query)
+#     results = cur.fetchall()
+#     for r in results[:numer_of_results]:
+#         #print(type(r))
+#         print(r)
+#     print('--> Result Rows:', len(results))
 
 # cur.execute('select * from "Albums"')
 # results = cur.fetchall()
@@ -143,15 +143,39 @@ class Artist():
 
 @app.route('/')
 def hello_world():
-    execute_and_print('select "artistName", from "artist_table"')
+    cur.execute('select "artistname" from "artist_table"')
     results = cur.fetchall()
     suggestion = []
-    for r in results[:numer_of_results]
-        print(r)
-    return render_template('start.html', suggestion)
+    for r in range(len(results)):
+        suggestion.append(results[r]['artistname'])
+    return render_template('start.html', list=suggestion)
 
 @app.route('/artist/<name>')
 def hello_artist(name):
+
+    #check if artist exists in DB
+    # cur.execute("""select "artistname", "artistid" from "artist_table" where lower("artistname") like lower('%coldplay%')""")
+    # results = cur.fetchall()
+
+#     cur.execute("""select "artistname", "artistid" from "artist_table" where lower("artistname") like lower('%coldplay%')""")
+    
+# print('==> Get Name, AlbumTitle of all tracks if Name contains fast or Fast')
+# execute_and_print("""select "Name", "Title" as "AlbumTitle"
+#     from "Track" INNER JOIN "Album" ON ("Track"."AlbumId" = "Album"."AlbumId")
+#     where "Name" ilike '%fast%' """, 5)
+
+    cur.execute("""select * from "album_table" INNER JOIN "artist_table" ON ("album_table"."artistid" = "artist_table"."artistid") 
+        where lower("artistname") like lower('%""" + name + """%') OR lower("collectionname") like lower('%""" + name + """%') """)
+
+    print('yolo')
+
+    results = cur.fetchall()
+
+    print(results)
+
+
+
+
 
     # HINT: Trying out the flickr accessing code in another file and seeing what data you get will help debug what you need to add and send to the template!
     # HINT 2: This is almost all the same kind of nested data investigation you've done before!

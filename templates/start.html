@@ -1,6 +1,6 @@
 <h1> Enter name of the artist </h1>
-<input id="search" placeholder="name here">
-<datalist id="search">
+<input list="suggestions" id="search" placeholder="name here">
+<datalist id="suggestions">
 	{% for suggestion in list %}
     	<option value={{suggestion}}>
 	{% endfor %}

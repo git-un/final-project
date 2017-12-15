@@ -1,0 +1,6 @@
+https://www.discogs.com/search/?type=artist&title=coldplay&advanced=1
+
+#search_results > first div > a[href]
+
+images
+.image_gallery_modal -> .image_gallery_slide_wrapper -> .loaded
