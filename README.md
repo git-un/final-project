@@ -30,6 +30,9 @@ Explain how to run the automated tests for this system
 ### Screenshots
 
 Please check out the following images in the repository:
+visualisation.png
+search artist.png
+artist album.png
 
 ## Authors
 
