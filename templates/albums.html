@@ -1,6 +1,10 @@
 <ol>
 {% for album in list %}
-    <li> <img src="{{album.img}}"> {{album.name}} </li>
+    <li> <img src="{{album.img}}"> {{album.name}} </br>
+      <div>
+        <a target="_blank" href={{album.link}}>Buy now for ${{album.price}}</a>
+      </div>
+    </li>
 {% endfor %}
 </ol>
 
