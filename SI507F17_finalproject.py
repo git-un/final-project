@@ -78,9 +78,6 @@ def execute_and_print(query, numer_of_results=30):
 # cur.execute('select * from "Albums"')
 # results = cur.fetchall()
 
-print('==> Get Name, AlbumId of all tracks')
-execute_and_print('select * from "album_table"')
-
 conn.commit()
 
 # Set up application
@@ -146,7 +143,12 @@ class Artist():
 
 @app.route('/')
 def hello_world():
-    return render_template('start.html')
+    execute_and_print('select "artistName", from "artist_table"')
+    results = cur.fetchall()
+    suggestion = []
+    for r in results[:numer_of_results]
+        print(r)
+    return render_template('start.html', suggestion)
 
 @app.route('/artist/<name>')
 def hello_artist(name):
