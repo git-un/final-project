@@ -14,7 +14,7 @@ This is a final projectfor SI 507.
 ### What happens when the code runs
 The Input: Expect to see a search bar on the HTML page in which you enter a music artist’s name.
 The Output: The code should return a list of works/albums/music collection related to the artist.
-### The visualisation: A bubble chart representing the genre of music played by the artist searched for.
+### The visualisation: A bubble chart representing the genre of music played by the artist searched for. (using d3.js)
 iTunes API link:  https://developer.apple.com/library/content/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1
 
 ### Requirements
