@@ -5,7 +5,7 @@ This is a final projectfor SI 507.
 ## Instructions to Grader
 
 ### At the command prompt type: You need to run server after the name of the python file
-### Name of the database is:
+### Name of the database is: 507final
 
 
 ### Python version: 3
